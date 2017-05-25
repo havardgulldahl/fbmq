@@ -262,7 +262,11 @@ class Page(object):
 
     def send(self, recipient_id, message, quick_replies=None, metadata=None,
              notification_type=None, callback=None):
-        text = message if isinstance(message, str) else message.encode('utf-8') if isinstance(message,unicode) else None
+        import sys
+        if sys.hexversion >= 0x3000000: # py3
+            text = message if isinstance(message, str) else None
+        else: # py2
+            text = message if isinstance(message, str) else message.encode('utf-8') if isinstance(message, unicode) else None
         attachment = message if not isinstance(message, str) else None
 
         payload = Payload(recipient=Recipient(id=recipient_id),
